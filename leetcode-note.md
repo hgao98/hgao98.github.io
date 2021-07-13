@@ -1,11 +1,3 @@
----
-title: LeetCode Note
-author: Hang Gao
-date: 2021-07-13
-category: Jekyll
-layout: post
----
-
 ## 二分法
 
 ### 数组中的值并不连续，结果可能在某两个相邻值中间
