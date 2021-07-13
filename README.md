@@ -1,1 +1,1 @@
-+ [LeetCode Note](LeetCode-Note.md)
++ [LeetCode Note](leetcode-note.md)
