@@ -1,63 +1,53 @@
-## 二分法
+# 题
 
-### 数组中的值并不连续，结果可能在某两个相邻值中间
+## 1846. 减小和重新排列数组后的最大元素
 
-+ 思路
++ 法一
 
-    判断跳出二分法循环时，结果应如何选取
+    + 思路
 
-+ 例题：
+        + 理想情况是，数组升序排列后进行修改，第一个数为1，后面每个数比前一个数大1，最终最大值与数组长度相等。
 
-    + 275. H 指数 II
+        + 特殊情况，原数组升序排列后，某处索引index处（index从0开始）的值不能达到(index+1)，也就是arr[index] < index+1，计算其差值的绝对值
 
-        + code
+        + 统计所有不能达到(index+1)的差值绝对值，求max，即为最终数组最大值与理想最大值（即数组长度）的差值。
 
-            ```java
-            class Solution {
-                public int hIndex(int[] citations) {
-                    int len = citations.length;
-                    if(len == 1){
-                        return citations[0]==0?0:1;
+    + code
+
+        ```java
+        class Solution {
+            public int maximumElementAfterDecrementingAndRearranging(int[] arr) {
+                int len = arr.length;
+                Arrays.sort(arr);
+                int maxDiff = 0;
+                for(int i=0; i<len; i++){
+                    if(arr[i] < i+1){
+                        maxDiff = Math.max(maxDiff, i + 1 - arr[i]);
                     }
-                    int left=0, right=len-1;
-                    int mid = 0;
-                    int smallerNum, realSmallerNum;
-
-                    while(left <= right){
-                        mid = (left + right)/2;
-
-                        if(len - mid <= citations[mid]){
-                            right = mid-1;
-                        } else{
-                            left = mid+1;
-                        }
-                    }
-
-                    return len - left;
                 }
+
+                return len-maxDiff;
             }
-            ```
+        }
+        ```
 
-        + 思路：
++ 法二[官方：排序 + 贪心]
 
-            + 跳出二分法循环时的状态分析
+    + [思路](https://leetcode-cn.com/problems/maximum-element-after-decreasing-and-rearranging/solution/jian-xiao-he-zhong-xin-pai-lie-shu-zu-ho-mzee/)
 
-                跳出二分法循环时（即刚经历了left==right，此时left==right+1），根据代码导致left==right+1有两种方式：
+    + code
 
-                1. `left = mid+1`
-
-                    此时left==right，并且判断`len - mid > citations[mid]`，不包含等于的情况，也就是说结果应在当前索引(left==right)的右侧，采取`left=mid+1`的操作，随后left>right，跳出二分法循环。
-
-                2. `right = mid-1`
-
-                    此时left==right，并且判断`len - mid <= citations[mid]`，包含等于的情况，也就是说结果应在当前索引(left==right)的左侧或者当前索引就是结果，然后采取`right=mid-1`的操作，随后left>right，跳出二分法循环。
-
-                此时left==right+1，且结果应在(right,left]。
-
-                结果不可能是当前right，因为left当前位置要么是0，要么是经过当前right的位置右移才到达left当前的位置，所以right的位置要么越界，要么已经被判断过不满足。
-
-                之所以结果可能为当前left，是因为right左移经过的数包含了相等的情况，所以依旧有可能。
-
-            + 通过跳出二分法时的状态，分析结果
-
-                现在知道h在(right,left]区间内，根据题目要求，可知h=len-left。
+        ```java
+        class Solution {
+        public:
+            int maximumElementAfterDecrementingAndRearranging(vector<int> &arr) {
+                int n = arr.size();
+                sort(arr.begin(), arr.end());
+                arr[0] = 1;
+                for (int i = 1; i < n; ++i) {
+                    arr[i] = min(arr[i], arr[i - 1] + 1);
+                }
+                return arr.back();
+            }
+        };
+        ```
